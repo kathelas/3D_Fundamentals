@@ -20,6 +20,7 @@
 ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include "Mat3.h"
 
 Game::Game( MainWindow& wnd )
 	:
@@ -39,13 +40,44 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	const float dt = 1.0f / 60.0f;
+	if( wnd.kbd.KeyIsPressed( 'Q' ) )
+	{
+		thetaX = wrapangle( thetaX + dt * dtheta );
+	}
+	if( wnd.kbd.KeyIsPressed( 'A' ) )
+	{
+		thetaX = wrapangle( thetaX - dt * dtheta );
+	}
+	if( wnd.kbd.KeyIsPressed( 'W' ) )
+	{
+		thetaY = wrapangle( thetaY + dt * dtheta );
+	}
+	if( wnd.kbd.KeyIsPressed( 'S' ) )
+	{
+		thetaY = wrapangle( thetaY - dt * dtheta );
+	}
+	if( wnd.kbd.KeyIsPressed( 'E' ) )
+	{
+		thetaZ = wrapangle( thetaZ + dt * dtheta );
+	}
+	if( wnd.kbd.KeyIsPressed( 'D' ) )
+	{
+		thetaZ = wrapangle( thetaZ - dt * dtheta );
+	}
 }
 
 void Game::ComposeFrame()
 {
 	auto lines = cube.GetLines();
+	const Mat3 rot =
+		Mat3::RotateX( thetaX ) *
+		Mat3::RotateY( thetaY ) *
+		Mat3::RotateZ( thetaZ );
+
 	for( auto& v : lines.vertices )
 	{
+		v *= rot;
 		v += { 0.0f,0.0f,1.0f };
 		pst.Transform( v );
 	}

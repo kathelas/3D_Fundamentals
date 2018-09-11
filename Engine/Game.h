@@ -44,5 +44,10 @@ private:
 	/*  User Variables              */
 	PubeScreenTransformer pst;
 	Cube cube;
+
+	float dtheta = PI;
+	float thetaX = 0.0f;
+	float thetaY = 0.0f;
+	float thetaZ = 0.0f;
 	/********************************/
 };
