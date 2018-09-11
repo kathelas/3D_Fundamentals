@@ -80,6 +80,36 @@ public:
 			(T)0.0,(T)0.0,factor 
 		};
 	}
+	static _Mat3 RotateZ( T theta )
+	{
+		const sinTheta = sin( theta );
+		const cosTheta = cos( theta );
+		return {
+			cosTheta,	sinTheta,	(T) 0.0,
+			-sinTheta,	cosTheta,	(T) 0.0,
+			(T) 0.0,		(T) 0.0,		(T) 1.0
+		};
+	}
+	static _Mat3 RotateY( T theta )
+	{
+		const sinTheta = sin( theta );
+		const cosTheta = cos( theta );
+		return {
+			cosTheta,	(T) 0.0,		-sinTheta,
+			(T) 0.0,		(T) 1.0,		(T) 0.0,
+			sinTheta,	(T) 0.0,		cosTheta
+		};
+	}
+	static _Mat3 RotateX( T theta )
+	{
+		const sinTheta = sin( theta );
+		const cosTheta = cos( theta );
+		return {
+			(T) 1.0,		(T) 0.0,		(T) 0.0,
+			(T) 0.0,		cosTheta,	sinTheta,
+			(T) 0.0,		-sinTheta,	cosTheta
+		};
+	}
 public:
 	// [ row ][ col ]
 	T elements[3][3];
