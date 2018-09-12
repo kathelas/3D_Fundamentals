@@ -63,6 +63,14 @@ public:
 		norm.Normalize();
 		return norm;
 	}
+	_Vec3	VectorProd( const _Vec3 &rhs, const _Vec3 &lhs )
+	{
+		return {
+			rhs.y * lhs.z - rhs.z * lhs.y,
+			rhs.z * lhs.x - rhs.x * lhs.z,
+			rhs.x * lhs.y - rhs.y * lhs.x
+		};
+	}
 	_Vec3	operator-() const
 	{
 		return _Vec3( -x,-y,-z );
