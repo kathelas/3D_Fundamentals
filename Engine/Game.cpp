@@ -86,7 +86,7 @@ void Game::ComposeFrame()
 		Mat3::RotateY( thetaY ) *
 		Mat3::RotateZ( thetaZ );
 
-	//transform from model space into "view" space
+	//transform from model space into "view" (world) space
 	for( auto& v : triangles.vertices )
 	{
 		v *= rot;
