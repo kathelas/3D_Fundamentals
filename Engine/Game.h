@@ -45,6 +45,7 @@ private:
 	PubeScreenTransformer pst;
 	Cube cube;
 
+	float zOffset = 2.0f;
 	float dtheta = PI;
 	float thetaX = 0.0f;
 	float thetaY = 0.0f;

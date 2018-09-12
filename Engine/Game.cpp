@@ -41,6 +41,7 @@ void Game::Go()
 void Game::UpdateModel()
 {
 	const float dt = 1.0f / 60.0f;
+
 	if( wnd.kbd.KeyIsPressed( 'Q' ) )
 	{
 		thetaX = wrapangle( thetaX + dt * dtheta );
@@ -65,6 +66,14 @@ void Game::UpdateModel()
 	{
 		thetaZ = wrapangle( thetaZ - dt * dtheta );
 	}
+	if( wnd.kbd.KeyIsPressed( 'R' ) )
+	{
+		zOffset = zOffset + dt;
+	}
+	if( wnd.kbd.KeyIsPressed( 'F' ) )
+	{
+		zOffset = zOffset - dt;
+	}
 }
 
 void Game::ComposeFrame()
@@ -78,7 +87,7 @@ void Game::ComposeFrame()
 	for( auto& v : lines.vertices )
 	{
 		v *= rot;
-		v += { 0.0f,0.0f,1.0f };
+		v += { 0.0f, 0.0f, zOffset };
 		pst.Transform( v );
 	}
 	for( auto i = lines.indices.cbegin(),
