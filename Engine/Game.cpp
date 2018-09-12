@@ -78,22 +78,23 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	auto lines = cube.GetLines();
+	auto triangles = cube.GetTriangles();
 	const Mat3 rot =
 		Mat3::RotateX( thetaX ) *
 		Mat3::RotateY( thetaY ) *
 		Mat3::RotateZ( thetaZ );
 
-	for( auto& v : lines.vertices )
+	for( auto& v : triangles.vertices )
 	{
 		v *= rot;
 		v += { 0.0f, 0.0f, zOffset };
 		pst.Transform( v );
 	}
-	for( auto i = lines.indices.cbegin(),
-		end = lines.indices.cend();
-		i != end; std::advance( i,2 ) )
+	for( auto i = triangles.indices.cbegin(),
+		end = triangles.indices.cend();
+		i != end; std::advance( i,3 ) )
 	{
-		gfx.DrawLine( lines.vertices[*i],lines.vertices[*std::next( i )],Colors::White );
+		gfx.DrawTriangle( triangles.vertices[*i], triangles.vertices[*std::next( i )], triangles.vertices[*std::next( i, 2 )],
+			colors[std::distance( triangles.indices.cbegin(), i ) / 3] );
 	}
 }

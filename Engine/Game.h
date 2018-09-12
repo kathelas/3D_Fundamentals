@@ -50,5 +50,21 @@ private:
 	float thetaX = 0.0f;
 	float thetaY = 0.0f;
 	float thetaZ = 0.0f;
+
+	const Color colors[12] = {
+		Colors::Blue,
+		Colors::Green,
+		Colors::White,
+		Colors::Red,
+		Colors::Yellow,
+		Colors::Cyan,
+
+		Colors::Magenta,
+		Colors::Cyan,
+		Colors::Gray,
+		Colors::LightGray,
+		Colors::Blue,
+		Colors::Yellow };
+
 	/********************************/
 };

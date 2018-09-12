@@ -381,3 +381,110 @@ void Graphics::DrawLine( float x1,float y1,float x2,float y2,Color c )
 		}
 	}
 }
+
+void Graphics::DrawTriangle( const Vec2& v0, const Vec2& v1, const Vec2& v2, Color c )
+{
+	const Vec2* pv0 = &v0;
+	const Vec2* pv1 = &v1;
+	const Vec2* pv2 = &v2;
+	
+	//sorting by y
+	if( pv1->y < pv0->y ) std::swap( pv0, pv1 );
+	if( pv2->y < pv1->y ) std::swap( pv1, pv2 );
+	if( pv1->y < pv0->y ) std::swap( pv0, pv1 );
+
+	//flattop
+	if( pv0->y == pv1->y )
+	{
+		//sorting top by x
+		if( pv1->x < pv0->x ) std::swap( pv0, pv1 );
+		DrawFlatTopTri( *pv0, *pv1, *pv2, c );
+	}
+
+	//flatbot
+	else if( pv1->y == pv2->y )
+	{
+		//sorting bot by x
+		if( pv2->x < pv1->x ) std::swap( pv0, pv1 );
+		DrawFlatBotTri( *pv0, *pv1, *pv2, c );
+	}
+
+	else
+	{
+		//find split
+		const float alpha = (pv1->y - pv0->y) / (pv2->y - pv0->y);
+		const Vec2 vsplit = *pv0 + (*pv2 - *pv0) * alpha;
+
+		//longest side on the right
+		if( pv1->x < vsplit.x )
+		{
+			DrawFlatBotTri( *pv0, *pv1, vsplit, c );
+			DrawFlatTopTri( *pv1, vsplit, *pv2, c );
+		}
+		//longest side on the left
+		else
+		{
+			DrawFlatBotTri( *pv0, vsplit, *pv1, c );
+			DrawFlatTopTri( vsplit, *pv1, *pv2, c );
+		}
+
+	}
+
+
+}
+
+void Graphics::DrawFlatTopTri( const Vec2& v0, const Vec2& v1, const Vec2& v2, Color c )
+{
+	//top left rule
+
+	//calc slopes
+	float m0 = (v2.x - v0.x) / (v2.y - v0.y);
+	float m1 = (v2.x - v1.x) / (v2.y - v1.y);
+
+	//calc y start and end
+	const int yStart = (int)ceil( v0.y - 0.5f );
+	const int yEnd = (int)ceil( v2.y - 0.5f ); // line after the last line drawn
+
+	for( int y = yStart; y < yEnd; y++ )
+	{
+		//calc x start and end
+		const float px0 = m0 * (float(y) + 0.5f - v0.y) + v0.x;
+		const float px1 = m1 * (float(y) + 0.5f - v1.y) + v1.x;
+
+		const int xStart = (int)ceil( px0 - 0.5f );
+		const int xEnd = (int)ceil( px1 - 0.5f ); // pixel after last pixel drawn
+
+		for( int x = xStart; x < xEnd; x++ )
+		{
+			PutPixel( x, y, c );
+		}
+	}
+}
+
+void Graphics::DrawFlatBotTri( const Vec2& v0, const Vec2& v1, const Vec2& v2, Color c )
+{
+	//top left rule
+
+	//calc slopes
+	float m0 = (v1.x - v0.x) / (v1.y - v0.y);
+	float m1 = (v2.x - v0.x) / (v2.y - v0.y);
+
+	//calc y start and end
+	const int yStart = (int)ceil( v0.y - 0.5f );
+	const int yEnd = (int)ceil( v2.y - 0.5f ); // line after the last line drawn
+
+	for( int y = yStart; y < yEnd; y++ )
+	{
+		//calc x start and end
+		const float px0 = m0 * (float(y) + 0.5f - v0.y) + v0.x;
+		const float px1 = m1 * (float(y) + 0.5f - v0.y) + v0.x;
+
+		const int xStart = (int)ceil( px0 - 0.5f );
+		const int xEnd = (int)ceil( px1 - 0.5f ); // pixel after last pixel drawn
+
+		for( int x = xStart; x < xEnd; x++ )
+		{
+			PutPixel( x, y, c );
+		}
+	}
+}
