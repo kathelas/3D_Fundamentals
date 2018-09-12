@@ -79,22 +79,47 @@ void Game::UpdateModel()
 void Game::ComposeFrame()
 {
 	auto triangles = cube.GetTriangles();
+
+	//rotation
 	const Mat3 rot =
 		Mat3::RotateX( thetaX ) *
 		Mat3::RotateY( thetaY ) *
 		Mat3::RotateZ( thetaZ );
 
+	//transform from model space into "view" space
 	for( auto& v : triangles.vertices )
 	{
 		v *= rot;
 		v += { 0.0f, 0.0f, zOffset };
+	}
+
+	//culling backface triangles
+	for( size_t i = 0, end = triangles.indices.size() / 3; i < end; i++ )
+	{
+		const Vec3& v0 = triangles.vertices[triangles.indices[i * 3]];
+		const Vec3& v1 = triangles.vertices[triangles.indices[i * 3 + 1]];
+		const Vec3& v2 = triangles.vertices[triangles.indices[i * 3 + 2]];
+		triangles.cullFlags[i] = ((v1 - v0).VectorProd( v2 - v0 )) * v0 > 0.0f;
+	}
+
+
+
+	//transform from view space into screen space, including perspective
+	for( auto& v : triangles.vertices )
+	{
 		pst.Transform( v );
 	}
-	for( auto i = triangles.indices.cbegin(),
-		end = triangles.indices.cend();
-		i != end; std::advance( i,3 ) )
+
+	//actual drawing
+	for( size_t i = 0, end = triangles.indices.size() / 3; i < end; i++ )
 	{
-		gfx.DrawTriangle( triangles.vertices[*i], triangles.vertices[*std::next( i )], triangles.vertices[*std::next( i, 2 )],
-			colors[std::distance( triangles.indices.cbegin(), i ) / 3] );
+		if( !triangles.cullFlags[i] )
+		{
+			gfx.DrawTriangle(
+				triangles.vertices[triangles.indices[i * 3]],
+				triangles.vertices[triangles.indices[i * 3 + 1]],
+				triangles.vertices[triangles.indices[i * 3 + 2]],
+				colors[i] );
+		}
 	}
 }
