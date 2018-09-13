@@ -158,6 +158,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SolidCubeScene.h" />
     <ClInclude Include="Surface.h" />
+    <ClInclude Include="TexCubeScene.h" />
     <ClInclude Include="TexVertex.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Vec3.h" />
@@ -240,6 +241,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Chili.ico" />
+    <Image Include="pics\grass.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

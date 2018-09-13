@@ -21,6 +21,7 @@
 #include "MainWindow.h"
 #include "Game.h"
 #include "SolidCubeScene.h"
+#include "TexCubeScene.h"
 
 Game::Game( MainWindow& wnd )
 	:
@@ -28,6 +29,7 @@ Game::Game( MainWindow& wnd )
 	gfx( wnd )
 {
 	scenes.push_back( std::make_unique<SolidCubeScene>() );
+	scenes.push_back( std::make_unique<TexCubeScene>() );
 	currentScene = scenes.begin();
 }
 

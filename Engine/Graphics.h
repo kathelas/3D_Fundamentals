@@ -26,6 +26,7 @@
 #include "Surface.h"
 #include "Colors.h"
 #include "Vec2.h"
+#include "TexVertex.h"
 
 #define CHILI_GFX_EXCEPTION( hr,note ) Graphics::Exception( hr,note,_CRT_WIDE(__FILE__),__LINE__ )
 
@@ -62,6 +63,7 @@ public:
 	}
 	void DrawLine( float x1,float y1,float x2,float y2,Color c );
 	void DrawTriangle( const Vec2& v0, const Vec2& v1, const Vec2& v2, Color c );
+	void DrawTriangleTex( const TexVertex& v0, const TexVertex& v1, const TexVertex& v2, Surface& tex );
 	void PutPixel( int x,int y,int r,int g,int b )
 	{
 		PutPixel( x,y,{ unsigned char( r ),unsigned char( g ),unsigned char( b ) } );
@@ -74,20 +76,22 @@ public:
 private:
 	void DrawFlatTopTri( const Vec2& v0, const Vec2& v1, const Vec2& v2, Color c );
 	void DrawFlatBotTri( const Vec2& v0, const Vec2& v1, const Vec2& v2, Color c );
+	void DrawFlatTopTriTex( const TexVertex& v0, const TexVertex& v1, const TexVertex& v2, Surface& tex );
+	void DrawFlatBotTriTex( const TexVertex& v0, const TexVertex& v1, const TexVertex& v2, Surface& tex );
 private:
 	GDIPlusManager										gdipMan;
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;
-	Microsoft::WRL::ComPtr<ID3D11Device>				pDevice;
+	Microsoft::WRL::ComPtr<ID3D11Device>					pDevice;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext>			pImmediateContext;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>		pRenderTargetView;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>				pSysBufferTexture;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	pSysBufferTextureView;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		pSysBufferTextureView;
 	Microsoft::WRL::ComPtr<ID3D11PixelShader>			pPixelShader;
 	Microsoft::WRL::ComPtr<ID3D11VertexShader>			pVertexShader;
-	Microsoft::WRL::ComPtr<ID3D11Buffer>				pVertexBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer>					pVertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11InputLayout>			pInputLayout;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState>			pSamplerState;
-	D3D11_MAPPED_SUBRESOURCE							mappedSysBufferTexture;
+	D3D11_MAPPED_SUBRESOURCE								mappedSysBufferTexture;
 	Surface												sysBuffer;
 public:
 	static constexpr unsigned int ScreenWidth = 640u;
