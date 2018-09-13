@@ -11,7 +11,13 @@ public:
 		pos( in_pos ),
 		postex( in_postex )
 	{}
-
+	TexVertex Interpolate( const TexVertex& dest, float alpha )
+	{
+		return {
+			pos.Interpolate( dest.pos, alpha ),
+			postex.Interpolate( dest.postex, alpha )
+		};
+	}
 
 	Vec3 pos;		//position on the model
 	Vec2 postex;		//coordinates in the texture
