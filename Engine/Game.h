@@ -21,8 +21,7 @@
 #pragma once
 
 #include "Graphics.h"
-#include "PubeScreenTransformer.h"
-#include "Cube.h"
+#include "Scene.h"
 
 class Game
 {
@@ -36,35 +35,16 @@ private:
 	void UpdateModel();
 	/********************************/
 	/*  User Functions              */
+	void CycleScene();
 	/********************************/
 private:
 	MainWindow& wnd;
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
-	PubeScreenTransformer pst;
-	Cube cube;
+	std::vector<std::unique_ptr<Scene>> scenes;
+	std::vector<std::unique_ptr<Scene>>::iterator currentScene;
 
-	float zOffset = 2.0f;
-	float dtheta = PI;
-	float thetaX = 0.0f;
-	float thetaY = 0.0f;
-	float thetaZ = 0.0f;
-
-	const Color colors[12] = {
-		Colors::Blue,
-		Colors::Green,
-		Colors::White,
-		Colors::Red,
-		Colors::Yellow,
-		Colors::Cyan,
-
-		Colors::Magenta,
-		Colors::Cyan,
-		Colors::Gray,
-		Colors::LightGray,
-		Colors::Blue,
-		Colors::Yellow };
 
 	/********************************/
 };

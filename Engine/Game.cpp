@@ -20,14 +20,15 @@
 ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
-#include "Mat3.h"
+#include "SolidCubeScene.h"
 
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd ),
-	cube( 1.0f )
+	gfx( wnd )
 {
+	scenes.push_back( std::make_unique<SolidCubeScene>() );
+	currentScene = scenes.begin();
 }
 
 void Game::Go()
@@ -42,84 +43,30 @@ void Game::UpdateModel()
 {
 	const float dt = 1.0f / 60.0f;
 
-	if( wnd.kbd.KeyIsPressed( 'Q' ) )
+	//changing scene
+	while( !wnd.kbd.KeyIsEmpty() )
 	{
-		thetaX = wrapangle( thetaX + dt * dtheta );
+		const auto e = wnd.kbd.ReadKey();
+		if( e.GetCode() == VK_TAB && e.IsPress() )
+		{
+			CycleScene();
+		}
 	}
-	if( wnd.kbd.KeyIsPressed( 'A' ) )
+
+	//updating scene
+	(*currentScene)->Update( wnd.kbd, wnd.mouse, dt );
+
+}
+
+void Game::CycleScene()
+{
+	if( ++currentScene == scenes.end() )
 	{
-		thetaX = wrapangle( thetaX - dt * dtheta );
-	}
-	if( wnd.kbd.KeyIsPressed( 'W' ) )
-	{
-		thetaY = wrapangle( thetaY + dt * dtheta );
-	}
-	if( wnd.kbd.KeyIsPressed( 'S' ) )
-	{
-		thetaY = wrapangle( thetaY - dt * dtheta );
-	}
-	if( wnd.kbd.KeyIsPressed( 'E' ) )
-	{
-		thetaZ = wrapangle( thetaZ + dt * dtheta );
-	}
-	if( wnd.kbd.KeyIsPressed( 'D' ) )
-	{
-		thetaZ = wrapangle( thetaZ - dt * dtheta );
-	}
-	if( wnd.kbd.KeyIsPressed( 'R' ) )
-	{
-		zOffset = zOffset + dt;
-	}
-	if( wnd.kbd.KeyIsPressed( 'F' ) )
-	{
-		zOffset = zOffset - dt;
+		currentScene = scenes.begin();
 	}
 }
 
 void Game::ComposeFrame()
 {
-	auto triangles = cube.GetTriangles();
-
-	//rotation
-	const Mat3 rot =
-		Mat3::RotateX( thetaX ) *
-		Mat3::RotateY( thetaY ) *
-		Mat3::RotateZ( thetaZ );
-
-	//transform from model space into "view" (world) space
-	for( auto& v : triangles.vertices )
-	{
-		v *= rot;
-		v += { 0.0f, 0.0f, zOffset };
-	}
-
-	//culling backface triangles
-	for( size_t i = 0, end = triangles.indices.size() / 3; i < end; i++ )
-	{
-		const Vec3& v0 = triangles.vertices[triangles.indices[i * 3]];
-		const Vec3& v1 = triangles.vertices[triangles.indices[i * 3 + 1]];
-		const Vec3& v2 = triangles.vertices[triangles.indices[i * 3 + 2]];
-		triangles.cullFlags[i] = ((v1 - v0).VectorProd( v2 - v0 )) * v0 > 0.0f;
-	}
-
-
-
-	//transform from view space into screen space, including perspective
-	for( auto& v : triangles.vertices )
-	{
-		pst.Transform( v );
-	}
-
-	//actual drawing
-	for( size_t i = 0, end = triangles.indices.size() / 3; i < end; i++ )
-	{
-		if( !triangles.cullFlags[i] )
-		{
-			gfx.DrawTriangle(
-				triangles.vertices[triangles.indices[i * 3]],
-				triangles.vertices[triangles.indices[i * 3 + 1]],
-				triangles.vertices[triangles.indices[i * 3 + 2]],
-				colors[i] );
-		}
-	}
+	(*currentScene)->Draw( gfx );
 }
