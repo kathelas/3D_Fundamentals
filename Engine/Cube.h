@@ -22,16 +22,16 @@ public:
 	}
 	IndexedLineList GetLines() const
 	{
-		return{ 
+		return { 
 			vertices,{
 			0,1,  1,3,  3,2,  2,0,
 			0,4,  1,5,	3,7,  2,6,
 			4,5,  5,7,	7,6,  6,4 }
 		};
 	}
-	IndexedTriangleList GetTriangles() const
+	IndexedTriangleList<Vec3> GetTriangles() const
 	{
-		return{
+		return {
 			vertices, {
 			0,2,1, 2,3,1,
 			1,3,5, 3,7,5,

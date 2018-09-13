@@ -120,7 +120,7 @@ public:
 	{
 		return x == rhs.x && y == rhs.y;
 	}
-	bool	operator!=(const _Vec2 &rhs) const
+	bool	operator!=( const _Vec2 &rhs ) const
 	{
 		return !(*this == rhs);
 	}
