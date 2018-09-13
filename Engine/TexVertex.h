@@ -11,7 +11,7 @@ public:
 		pos( in_pos ),
 		postex( in_postex )
 	{}
-	TexVertex Interpolate( const TexVertex& dest, float alpha )
+	TexVertex Interpolate( const TexVertex& dest, float alpha ) const
 	{
 		return {
 			pos.Interpolate( dest.pos, alpha ),

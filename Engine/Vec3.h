@@ -138,7 +138,7 @@ public:
 	{
 		return !(*this == rhs);
 	}
-	_Vec3	Interpolate( const _vec3& dest, T alpha )
+	_Vec3	Interpolate( const _Vec3& dest, T alpha ) const
 	{
 		return *this + (dest - *this) * alpha;
 	}
