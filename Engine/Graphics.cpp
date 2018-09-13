@@ -485,8 +485,8 @@ void Graphics::DrawFlatTopTri( const Vec2& v0, const Vec2& v1, const Vec2& v2, C
 	//top left rule
 
 	//calc slopes
-	float m0 = (v2.x - v0.x) / (v2.y - v0.y);
-	float m1 = (v2.x - v1.x) / (v2.y - v1.y);
+	const float m0 = (v2.x - v0.x) / (v2.y - v0.y);
+	const float m1 = (v2.x - v1.x) / (v2.y - v1.y);
 
 	//calc y start and end
 	const int yStart = (int)ceil( v0.y - 0.5f );
@@ -513,8 +513,8 @@ void Graphics::DrawFlatBotTri( const Vec2& v0, const Vec2& v1, const Vec2& v2, C
 	//top left rule
 
 	//calc slopes
-	float m0 = (v1.x - v0.x) / (v1.y - v0.y);
-	float m1 = (v2.x - v0.x) / (v2.y - v0.y);
+	const float m0 = (v1.x - v0.x) / (v1.y - v0.y);
+	const float m1 = (v2.x - v0.x) / (v2.y - v0.y);
 
 	//calc y start and end
 	const int yStart = (int)ceil( v0.y - 0.5f );
@@ -541,8 +541,8 @@ void Graphics::DrawFlatTopTriTex( const TexVertex& v0, const TexVertex& v1, cons
 	//top left rule
 
 	//calc slopes
-	float m0 = (v2.pos.x - v0.pos.x) / (v2.pos.y - v0.pos.y);
-	float m1 = (v2.pos.x - v1.pos.x) / (v2.pos.y - v1.pos.y);
+	const float m0 = (v2.pos.x - v0.pos.x) / (v2.pos.y - v0.pos.y);
+	const float m1 = (v2.pos.x - v1.pos.x) / (v2.pos.y - v1.pos.y);
 
 	//calc y start and end
 	const int yStart = (int)ceil( v0.pos.y - 0.5f );
@@ -597,8 +597,8 @@ void Graphics::DrawFlatBotTriTex( const TexVertex& v0, const TexVertex& v1, cons
 	//top left rule
 
 	//calc slopes
-	float m0 = (v1.pos.x - v0.pos.x) / (v1.pos.y - v0.pos.y);
-	float m1 = (v2.pos.x - v0.pos.x) / (v2.pos.y - v0.pos.y);
+	const float m0 = (v1.pos.x - v0.pos.x) / (v1.pos.y - v0.pos.y);
+	const float m1 = (v2.pos.x - v0.pos.x) / (v2.pos.y - v0.pos.y);
 
 	//calc y start and end
 	const int yStart = (int)ceil( v0.pos.y - 0.5f );
