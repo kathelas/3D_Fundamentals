@@ -540,26 +540,23 @@ void Graphics::DrawFlatTopTriTex( const TexVertex& v0, const TexVertex& v1, cons
 {
 	//top left rule
 
-	//calc slopes
-	const float m0 = (v2.pos.x - v0.pos.x) / (v2.pos.y - v0.pos.y);
-	const float m1 = (v2.pos.x - v1.pos.x) / (v2.pos.y - v1.pos.y);
+	//calc dVertex / dy
+	const float deltay = v2.pos.y - v0.pos.y;
+	const TexVertex dv0 = (v2 - v0) / deltay;
+	const TexVertex dv1 = (v2 - v1) / deltay;
+
+	//create edges to loop over
+
+	TexVertex edge0 = v0;
+	TexVertex edge1 = v1;
 
 	//calc y start and end
 	const int yStart = (int)ceil( v0.pos.y - 0.5f );
 	const int yEnd = (int)ceil( v2.pos.y - 0.5f ); // line after the last line drawn
 
-	//init tex coords
-	Vec2 tcEdgeL = v0.postex;
-	Vec2 tcEdgeR = v1.postex;
-	const Vec2 tcBot = v2.postex;
-
-	//calc tex coords steps ("movement" in texture / "movement" in triangle)
-	const Vec2 tcStepL = (tcBot - tcEdgeL) / (v2.pos.y - v0.pos.y);
-	const Vec2 tcStepR = (tcBot - tcEdgeR) / (v2.pos.y - v1.pos.y);
-
 	//prestep (because you start drawing the triangle at the middle of the first pixel not right at the vertex)
-	tcEdgeL += tcStepL * (float( yStart ) + 0.5f - v1.pos.y);
-	tcEdgeR += tcStepR * (float( yStart ) + 0.5f - v1.pos.y);
+	edge0 += dv0 * ( float( yStart ) + 0.5f - v1.pos.y );
+	edge1 += dv1 * ( float( yStart ) + 0.5f - v1.pos.y );
 
 	//init tex width/height
 	const float texw = float( tex.GetWidth() );
@@ -567,26 +564,21 @@ void Graphics::DrawFlatTopTriTex( const TexVertex& v0, const TexVertex& v1, cons
 	const float texclampx = texw - 1.0f;
 	const float texclampy = texh - 1.0f;
 
-	for( int y = yStart; y < yEnd; y++, tcEdgeL += tcStepL, tcEdgeR += tcStepR )
+	for( int y = yStart; y < yEnd; y++, edge0 += dv0, edge1 += dv1 )
 	{
-		//calc x start and end coords (0.5 cause based on pixel centers)
-		const float px0 = m0 * (float( y ) + 0.5f - v0.pos.y) + v0.pos.x;
-		const float px1 = m1 * (float( y ) + 0.5f - v1.pos.y) + v1.pos.x;
+		//calc start and end pixels
+		const int xStart = (int)ceil( edge0.pos.x - 0.5f );
+		const int xEnd = (int)ceil( edge1.pos.x - 0.5f );
 
-		//start and end pixels
-		const int xStart = (int)ceil( px0 - 0.5f );
-		const int xEnd = (int)ceil( px1 - 0.5f ); // pixel after last pixel drawn
-
-		//calc x step
-		const Vec2 tcStepX = (tcEdgeR - tcEdgeL) / (px1 - px0);
+		//calc dTex / dx
+		const Vec2 dtexline = (edge1.postex - edge0.postex) / (edge1.pos.x - edge0.pos.x);
 
 		//prestep
-		Vec2 texc = tcEdgeL + tcStepX * (float( xStart ) + 0.5f - px0);
+		Vec2 texline = edge0.postex + dtexline * (float( xStart ) + 0.5f - edge0.pos.x);
 
-
-		for( int x = xStart; x < xEnd; x++, texc += tcStepX )
+		for( int x = xStart; x < xEnd; x++, texline += dtexline )
 		{
-			PutPixel( x, y, tex.GetPixel( int( std::min( texc.x * texw, texclampx ) ), int( std::min( texc.y * texh, texclampy ) ) ) );
+			PutPixel( x, y, tex.GetPixel( int( std::min( texline.x * texw, texclampx ) ), int( std::min( texline.y * texh, texclampy ) ) ) );
 			//making sure not to read of the texture edge (fp error)
 		}
 	}
@@ -596,27 +588,23 @@ void Graphics::DrawFlatBotTriTex( const TexVertex& v0, const TexVertex& v1, cons
 {
 	//top left rule
 
-	//calc slopes
-	const float m0 = (v1.pos.x - v0.pos.x) / (v1.pos.y - v0.pos.y);
-	const float m1 = (v2.pos.x - v0.pos.x) / (v2.pos.y - v0.pos.y);
+	//calc dVertex / dy
+	const float deltay = v2.pos.y - v0.pos.y;
+	const TexVertex dv0 = (v1 - v0) / deltay;
+	const TexVertex dv1 = (v2 - v0) / deltay;
+
+	//create edges to loop over
+
+	TexVertex edge0 = v0;
+	TexVertex edge1 = v0;
 
 	//calc y start and end
 	const int yStart = (int)ceil( v0.pos.y - 0.5f );
 	const int yEnd = (int)ceil( v2.pos.y - 0.5f ); // line after the last line drawn
 
-	//init tex coords
-	Vec2 tcEdgeL = v0.postex;
-	Vec2 tcEdgeR = v1.postex;
-	const Vec2 tcBotL = v1.postex;
-	const Vec2 tcBotR = v2.postex;
-
-	//calc tex coords steps ("movement" in texture / "movement" in triangle)
-	const Vec2 tcStepL = (tcBotL - tcEdgeL) / (v1.pos.y - v0.pos.y);
-	const Vec2 tcStepR = (tcBotR - tcEdgeR) / (v2.pos.y - v0.pos.y);
-
 	//prestep (because you start drawing the triangle at the middle of the first pixel not right at the vertex)
-	tcEdgeL += tcStepL * (float( yStart ) + 0.5f - v0.pos.y);
-	tcEdgeR += tcStepR * (float( yStart ) + 0.5f - v0.pos.y);
+	edge0 += dv0 * (float( yStart ) + 0.5f - v0.pos.y);
+	edge1 += dv1 * (float( yStart ) + 0.5f - v0.pos.y);
 
 	//init tex width/height
 	const float texw = float( tex.GetWidth() );
@@ -624,26 +612,21 @@ void Graphics::DrawFlatBotTriTex( const TexVertex& v0, const TexVertex& v1, cons
 	const float texclampx = texw - 1.0f;
 	const float texclampy = texh - 1.0f;
 
-	for( int y = yStart; y < yEnd; y++, tcEdgeL += tcStepL, tcEdgeR += tcStepR )
+	for( int y = yStart; y < yEnd; y++, edge0 += dv0, edge1 += dv1 )
 	{
-		//calc x start and end coords (0.5 cause based on pixel centers)
-		const float px0 = m0 * (float( y ) + 0.5f - v0.pos.y) + v0.pos.x;
-		const float px1 = m1 * (float( y ) + 0.5f - v0.pos.y) + v0.pos.x;
+		//calc start and end pixels
+		const int xStart = (int)ceil( edge0.pos.x - 0.5f );
+		const int xEnd = (int)ceil( edge1.pos.x - 0.5f );
 
-		//start and end pixels
-		const int xStart = (int)ceil( px0 - 0.5f );
-		const int xEnd = (int)ceil( px1 - 0.5f ); // pixel after last pixel drawn
-
-		//calc x step
-		const Vec2 tcStepX = (tcEdgeR - tcEdgeL) / (px1 - px0);
+		//calc dTex / dx
+		const Vec2 dtexline = (edge1.postex - edge0.postex) / (edge1.pos.x - edge0.pos.x);
 
 		//prestep
-		Vec2 texc = tcEdgeL + tcStepX * (float( xStart ) + 0.5f - px0);
+		Vec2 texline = edge0.postex + dtexline * (float( xStart ) + 0.5f - edge0.pos.x);
 
-
-		for( int x = xStart; x < xEnd; x++, texc += tcStepX )
+		for( int x = xStart; x < xEnd; x++, texline += dtexline )
 		{
-			PutPixel( x, y, tex.GetPixel( int( std::min( texc.x * texw, texclampx ) ), int( std::min( texc.y * texh, texclampy ) ) ) );
+			PutPixel( x, y, tex.GetPixel( int( std::min( texline.x * texw, texclampx ) ), int( std::min( texline.y * texh, texclampy ) ) ) );
 			//making sure not to read of the texture edge (fp error)
 		}
 	}

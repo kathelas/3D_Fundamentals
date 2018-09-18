@@ -18,7 +18,48 @@ public:
 			postex.Interpolate( dest.postex, alpha )
 		};
 	}
+	TexVertex& operator+=( const TexVertex& rhs )
+	{
+		pos += rhs.pos;
+		postex += rhs.postex;
+		return *this;
+	}
+	TexVertex operator+( const TexVertex& rhs ) const
+	{
+		return TexVertex( *this ) += rhs;
+	}
+	TexVertex& operator-=( const TexVertex& rhs )
+	{
+		pos -= rhs.pos;
+		postex -= rhs.postex;
+		return *this;
+	}
+	TexVertex operator-( const TexVertex& rhs ) const
+	{
+		return TexVertex( *this ) -= rhs;
+	}
+	TexVertex& operator*=( float rhs )
+	{
+		pos *= rhs;
+		postex *= rhs;
+		return *this;
+	}
+	TexVertex operator*( float rhs ) const
+	{
+		return TexVertex( *this ) *= rhs;
+	}
+	TexVertex& operator/=( float rhs )
+	{
+		pos /= rhs;
+		postex /= rhs;
+		return *this;
+	}
+	TexVertex operator/( float rhs ) const
+	{
+		return TexVertex( *this ) /= rhs;
+	}
 
+public:
 	Vec3 pos;		//position on the model
 	Vec2 postex;		//coordinates in the texture
 };

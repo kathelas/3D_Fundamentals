@@ -100,5 +100,5 @@ private:
 	float thetaY = 0.0f;
 	float thetaZ = 0.0f;
 
-	Surface texture = Surface::FromFile( L"pics\\grass.png" );
+	Surface texture = Surface::FromFile( L"pics\\sauron.png" );
 };
