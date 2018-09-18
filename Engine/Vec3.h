@@ -66,9 +66,9 @@ public:
 	_Vec3	VectorProd( const _Vec3 &lhs )
 	{
 		return {
-			this->y * lhs.z - this->z * lhs.y,
-			this->z * lhs.x - this->x * lhs.z,
-			this->x * lhs.y - this->y * lhs.x
+			y * lhs.z - z * lhs.y,
+			z * lhs.x - x * lhs.z,
+			x * lhs.y - y * lhs.x
 		};
 	}
 	_Vec3	operator-() const

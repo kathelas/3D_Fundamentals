@@ -405,7 +405,7 @@ void Graphics::DrawTriangle( const Vec2& v0, const Vec2& v1, const Vec2& v2, Col
 	else if( pv1->y == pv2->y )
 	{
 		//sorting bot by x
-		if( pv2->x < pv1->x ) std::swap( pv0, pv1 );
+		if( pv2->x < pv1->x ) std::swap( pv1, pv2 );
 		DrawFlatBotTri( *pv0, *pv1, *pv2, c );
 	}
 
@@ -454,7 +454,7 @@ void Graphics::DrawTriangleTex( const TexVertex& v0, const TexVertex& v1, const 
 	else if( pv1->pos.y == pv2->pos.y )
 	{
 		//sorting bot by x
-		if( pv2->pos.x < pv1->pos.x ) std::swap( pv0, pv1 );
+		if( pv2->pos.x < pv1->pos.x ) std::swap( pv1, pv2 );
 		DrawFlatBotTriTex( *pv0, *pv1, *pv2, tex );
 	}
 
