@@ -37,3 +37,9 @@ inline T wrapangle( T theta )
 	const T temp = fmod( theta, (T)2.0 * (T)PI_D );
 	return (temp > (T)PI_D) ? (temp - (T)2.0 * (T)PI_D) : temp;
 }
+
+template<typename T>
+inline T interpolate( const T& start, const T& end, float alpha )
+{
+	return start + (end - start) * alpha;
+}
