@@ -22,6 +22,7 @@
 
 #include "Graphics.h"
 #include "Scene.h"
+#include "FrameTimer.h"
 
 class Game
 {
@@ -42,9 +43,9 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	FrameTimer ft;
 	std::vector<std::unique_ptr<Scene>> scenes;
 	std::vector<std::unique_ptr<Scene>>::iterator currentScene;
-
 
 	/********************************/
 };
