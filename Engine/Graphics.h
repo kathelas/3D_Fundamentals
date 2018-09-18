@@ -78,6 +78,8 @@ private:
 	void DrawFlatBotTri( const Vec2& v0, const Vec2& v1, const Vec2& v2, Color c );
 	void DrawFlatTopTriTex( const TexVertex& v0, const TexVertex& v1, const TexVertex& v2, Surface& tex );
 	void DrawFlatBotTriTex( const TexVertex& v0, const TexVertex& v1, const TexVertex& v2, Surface& tex );
+	void DrawFlatTriTex( const TexVertex& v0, const TexVertex& v1, const TexVertex& v2, Surface& tex,
+		const TexVertex& dv0, const TexVertex& dv1, TexVertex& edge1 );
 private:
 	GDIPlusManager										gdipMan;
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;

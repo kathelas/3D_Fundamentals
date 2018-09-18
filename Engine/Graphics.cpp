@@ -545,43 +545,10 @@ void Graphics::DrawFlatTopTriTex( const TexVertex& v0, const TexVertex& v1, cons
 	const TexVertex dv0 = (v2 - v0) / deltay;
 	const TexVertex dv1 = (v2 - v1) / deltay;
 
-	//create edges to loop over
-
-	TexVertex edge0 = v0;
+	//create right edge
 	TexVertex edge1 = v1;
 
-	//calc y start and end
-	const int yStart = (int)ceil( v0.pos.y - 0.5f );
-	const int yEnd = (int)ceil( v2.pos.y - 0.5f ); // line after the last line drawn
-
-	//prestep (because you start drawing the triangle at the middle of the first pixel not right at the vertex)
-	edge0 += dv0 * ( float( yStart ) + 0.5f - v1.pos.y );
-	edge1 += dv1 * ( float( yStart ) + 0.5f - v1.pos.y );
-
-	//init tex width/height
-	const float texw = float( tex.GetWidth() );
-	const float texh = float( tex.GetHeight() );
-	const float texclampx = texw - 1.0f;
-	const float texclampy = texh - 1.0f;
-
-	for( int y = yStart; y < yEnd; y++, edge0 += dv0, edge1 += dv1 )
-	{
-		//calc start and end pixels
-		const int xStart = (int)ceil( edge0.pos.x - 0.5f );
-		const int xEnd = (int)ceil( edge1.pos.x - 0.5f );
-
-		//calc dTex / dx
-		const Vec2 dtexline = (edge1.postex - edge0.postex) / (edge1.pos.x - edge0.pos.x);
-
-		//prestep
-		Vec2 texline = edge0.postex + dtexline * (float( xStart ) + 0.5f - edge0.pos.x);
-
-		for( int x = xStart; x < xEnd; x++, texline += dtexline )
-		{
-			PutPixel( x, y, tex.GetPixel( int( std::min( texline.x * texw, texclampx ) ), int( std::min( texline.y * texh, texclampy ) ) ) );
-			//making sure not to read of the texture edge (fp error)
-		}
-	}
+	DrawFlatTriTex( v0, v1, v2, tex, dv0, dv1, edge1 );
 }
 
 void Graphics::DrawFlatBotTriTex( const TexVertex& v0, const TexVertex& v1, const TexVertex& v2, Surface& tex )
@@ -593,10 +560,16 @@ void Graphics::DrawFlatBotTriTex( const TexVertex& v0, const TexVertex& v1, cons
 	const TexVertex dv0 = (v1 - v0) / deltay;
 	const TexVertex dv1 = (v2 - v0) / deltay;
 
-	//create edges to loop over
-
-	TexVertex edge0 = v0;
+	//create right edge
 	TexVertex edge1 = v0;
+
+	DrawFlatTriTex( v0, v1, v2, tex, dv0, dv1, edge1 );
+}
+
+void Graphics::DrawFlatTriTex( const TexVertex & v0, const TexVertex & v1, const TexVertex & v2, Surface & tex, const TexVertex & dv0, const TexVertex & dv1, TexVertex & edge1 )
+{
+	//create left edge, always v0
+	TexVertex edge0 = v0;
 
 	//calc y start and end
 	const int yStart = (int)ceil( v0.pos.y - 0.5f );
@@ -630,4 +603,6 @@ void Graphics::DrawFlatBotTriTex( const TexVertex& v0, const TexVertex& v1, cons
 			//making sure not to read of the texture edge (fp error)
 		}
 	}
+
+
 }
