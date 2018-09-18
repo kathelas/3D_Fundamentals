@@ -37,6 +37,7 @@ private:
 	/********************************/
 	/*  User Functions              */
 	void CycleScene();
+	void ReverseCycleScene();
 	/********************************/
 private:
 	MainWindow& wnd;

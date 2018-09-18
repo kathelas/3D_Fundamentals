@@ -603,6 +603,4 @@ void Graphics::DrawFlatTriTex( const TexVertex & v0, const TexVertex & v1, const
 			//making sure not to read of the texture edge (fp error)
 		}
 	}
-
-
 }
