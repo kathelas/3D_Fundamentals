@@ -20,16 +20,15 @@
 ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
-#include "SolidCubeScene.h"
-#include "TexCubeScene.h"
+#include "CubeSkinScene.h"
 
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd )
 {
-	scenes.push_back( std::make_unique<SolidCubeScene>() );
-	scenes.push_back( std::make_unique<TexCubeScene>() );
+	scenes.push_back( std::make_unique<CubeSkinScene>( gfx, L"pics\\skinnedcube.png") );
+	scenes.push_back( std::make_unique<CubeSkinScene>( gfx, L"pics\\skinnedcubemc.png" ) );
 	currentScene = scenes.begin();
 }
 
@@ -89,5 +88,5 @@ void Game::ReverseCycleScene()
 
 void Game::ComposeFrame()
 {
-	(*currentScene)->Draw( gfx );
+	(*currentScene)->Draw();
 }
