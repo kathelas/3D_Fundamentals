@@ -161,6 +161,7 @@
     <ClInclude Include="Surface.h" />
     <ClInclude Include="TexCubeScene.h" />
     <ClInclude Include="TexVertex.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Vec3.h" />
   </ItemGroup>
