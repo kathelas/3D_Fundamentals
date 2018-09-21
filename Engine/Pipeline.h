@@ -6,70 +6,13 @@
 #include "Triangle.h"
 #include "IndexedTriangleList.h"
 
+template<class Effect>
 class Pipeline
 {
-	//fixed pipeline
+	//pipeline with configurable pixel shader effect
 	//draws textured triangle lists
 public:
-	class Vertex
-	{
-	public:
-		Vertex() = default;
-		Vertex( const Vec3& pos, const Vec2& t )
-			:
-			pos( pos ),
-			t( t )
-		{}
-		Vertex( const Vec3& pos, Vertex& src )
-			:
-			pos( pos ),
-			t( src.t )
-		{}
-		Vertex& operator+=( const Vertex& rhs )
-		{
-			pos += rhs.pos;
-			t += rhs.t;
-			return *this;
-		}
-		Vertex operator+( const Vertex& rhs ) const
-		{
-			return Vertex( *this ) += rhs;
-		}
-		Vertex& operator-=( const Vertex& rhs )
-		{
-			pos -= rhs.pos;
-			t -= rhs.t;
-			return *this;
-		}
-		Vertex operator-( const Vertex& rhs ) const
-		{
-			return Vertex( *this ) -= rhs;
-		}
-		Vertex& operator*=( float rhs )
-		{
-			pos *= rhs;
-			t *= rhs;
-			return *this;
-		}
-		Vertex operator*( float rhs ) const
-		{
-			return Vertex( *this ) *= rhs;
-		}
-		Vertex& operator/=( float rhs )
-		{
-			pos /= rhs;
-			t /= rhs;
-			return *this;
-		}
-		Vertex operator/( float rhs ) const
-		{
-			return Vertex( *this ) /= rhs;
-		}
-
-	public:
-		Vec3 pos;
-		Vec2 t;		//texture coordinates
-	};
+	typedef typename Effect::Vertex Vertex;
 
 public:
 	Pipeline( Graphics& gfx )
@@ -87,10 +30,6 @@ public:
 	void BindTranslation( const Vec3& transl_in )
 	{
 		translation = transl_in;
-	}
-	void BindTexture( const std::wstring& filename )
-	{
-		ptex = std::make_unique<Surface>( Surface::FromFile( filename ) );
 	}
 private:
 	//vertex processing
@@ -236,12 +175,6 @@ private:
 		itedge0 += dv0 * (float( yStart ) + 0.5f - it0.pos.y);
 		itedge1 += dv1 * (float( yStart ) + 0.5f - it0.pos.y);
 
-		//init clamping constants
-		const float texw = float( ptex->GetWidth() );
-		const float texh = float( ptex->GetHeight() );
-		const float texclampx = texw - 1.0f;
-		const float texclampy = texh - 1.0f;
-
 		for( int y = yStart; y < yEnd; y++, itedge0 += dv0, itedge1 += dv1 )
 		{
 			//calc start and end pixels
@@ -261,19 +194,18 @@ private:
 
 			for( int x = xStart; x < xEnd; x++, iline += diline )
 			{
-				gfx.PutPixel( x, y, ptex->GetPixel(
-					unsigned int( std::min( iline.t.x * texw + 0.5f, texclampx ) ),
-					unsigned int( std::min( iline.t.y * texh + 0.5f, texclampy ) ) ) );
-				//making sure not to read of the texture edge (fp error)
+				//invoking pixelshader
+				gfx.PutPixel( x, y, effect.ps( iline ) );
 			}
 		}
 	}
 
+public:
+	Effect effect;
 
 private:
 	Graphics& gfx;
 	PubeScreenTransformer pst;
 	Mat3 rotation;
 	Vec3 translation;
-	std::unique_ptr<Surface> ptex;
 };
