@@ -161,7 +161,7 @@ private:
 
 		DrawFlatTriangle( it0, it1, it2, dit0, dit1, itedge1 );
 	}
-	//processing common to both flat triangles + texture lookup, clamping and pixel drawing
+	//processing common to both flat triangles and pixel drawing with pixelshader
 	void DrawFlatTriangle( const Vertex& it0, const Vertex& it1, const Vertex& it2, const Vertex& dv0, const Vertex& dv1, Vertex itedge1 )
 	{
 		//create left egde interpolant, always it0
