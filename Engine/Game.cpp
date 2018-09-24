@@ -42,27 +42,30 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	const float dt = ft.Mark();
+	//const float dt = ft.Mark();
+	//
+	////changing scene
+	//while( !wnd.kbd.KeyIsEmpty() )
+	//{
+	//	const auto e = wnd.kbd.ReadKey();
+	//	if( e.GetCode() == VK_TAB && e.IsPress() )
+	//	{
+	//		if( wnd.kbd.KeyIsPressed( VK_SHIFT ) )
+	//		{
+	//			ReverseCycleScene();
+	//		}
+	//		else
+	//		{
+	//			CycleScene();
+	//		}
+	//	}
+	//}
+	//
+	////updating scene
+	//(*currentScene)->Update( wnd.kbd, wnd.mouse, dt );
 
-	//changing scene
-	while( !wnd.kbd.KeyIsEmpty() )
-	{
-		const auto e = wnd.kbd.ReadKey();
-		if( e.GetCode() == VK_TAB && e.IsPress() )
-		{
-			if( wnd.kbd.KeyIsPressed( VK_SHIFT ) )
-			{
-				ReverseCycleScene();
-			}
-			else
-			{
-				CycleScene();
-			}
-		}
-	}
 
-	//updating scene
-	(*currentScene)->Update( wnd.kbd, wnd.mouse, dt );
+
 
 }
 
@@ -88,5 +91,10 @@ void Game::ReverseCycleScene()
 
 void Game::ComposeFrame()
 {
-	(*currentScene)->Draw();
+	//(*currentScene)->Draw();
+
+	
+
+
+
 }
