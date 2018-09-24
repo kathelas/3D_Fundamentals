@@ -21,14 +21,16 @@
 #include "MainWindow.h"
 #include "Game.h"
 #include "CubeSkinScene.h"
+#include "FractalScene.h"
 
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd )
 {
-	scenes.push_back( std::make_unique<CubeSkinScene>( gfx, L"pics\\skinnedcube.png") );
-	scenes.push_back( std::make_unique<CubeSkinScene>( gfx, L"pics\\skinnedcubemc.png" ) );
+	//scenes.push_back( std::make_unique<CubeSkinScene>( gfx, L"pics\\skinnedcube.png") );
+	//scenes.push_back( std::make_unique<CubeSkinScene>( gfx, L"pics\\skinnedcubemc.png" ) );
+	scenes.push_back( std::make_unique<FractalScene>( gfx ) );
 	currentScene = scenes.begin();
 }
 
@@ -42,27 +44,27 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	//const float dt = ft.Mark();
-	//
-	////changing scene
-	//while( !wnd.kbd.KeyIsEmpty() )
-	//{
-	//	const auto e = wnd.kbd.ReadKey();
-	//	if( e.GetCode() == VK_TAB && e.IsPress() )
-	//	{
-	//		if( wnd.kbd.KeyIsPressed( VK_SHIFT ) )
-	//		{
-	//			ReverseCycleScene();
-	//		}
-	//		else
-	//		{
-	//			CycleScene();
-	//		}
-	//	}
-	//}
-	//
-	////updating scene
-	//(*currentScene)->Update( wnd.kbd, wnd.mouse, dt );
+	const float dt = ft.Mark();
+	
+	//changing scene
+	while( !wnd.kbd.KeyIsEmpty() )
+	{
+		const auto e = wnd.kbd.ReadKey();
+		if( e.GetCode() == VK_TAB && e.IsPress() )
+		{
+			if( wnd.kbd.KeyIsPressed( VK_SHIFT ) )
+			{
+				ReverseCycleScene();
+			}
+			else
+			{
+				CycleScene();
+			}
+		}
+	}
+	
+	//updating scene
+	(*currentScene)->Update( wnd.kbd, wnd.mouse, dt );
 
 
 
@@ -91,7 +93,7 @@ void Game::ReverseCycleScene()
 
 void Game::ComposeFrame()
 {
-	//(*currentScene)->Draw();
+	(*currentScene)->Draw();
 
 	
 

@@ -5,10 +5,11 @@
 class Transformer
 {
 public:
-	Vec2& Transform( Vec2& v )
+	Vec2& Transform( Vec2& v, float z )
 	{
-		v.x = (v.x + 1.0f) * xFactor;
-		v.y = (-v.y + 1.0f) * yFactor;
+		const float zInv = 1.0f / z;
+		v.x = (v.x * zInv + 1.0f) * xFactor;
+			v.y = (-v.y * zInv + 1.0f) * yFactor;
 		return v;
 	}
 private:

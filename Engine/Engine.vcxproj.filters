@@ -105,6 +105,12 @@
     <ClInclude Include="Transformer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FractalScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SameSideTri.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXErr.cpp">

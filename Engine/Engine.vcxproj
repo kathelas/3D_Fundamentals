@@ -142,6 +142,7 @@
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="DXErr.h" />
+    <ClInclude Include="FractalScene.h" />
     <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GDIPlusManager.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="PubeScreenTransformer.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SameSideTri.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="CubeSkinScene.h" />
     <ClInclude Include="Surface.h" />
