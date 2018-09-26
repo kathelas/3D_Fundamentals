@@ -19,6 +19,7 @@
 *	along with The Chili DirectX Framework.  If not, see <http://www.gnu.org/licenses/>.  *
 ******************************************************************************************/
 #pragma once
+#include "Vec3.h"
 
 class Color
 {
@@ -34,15 +35,15 @@ public:
 		:
 		dword( dw )
 	{}
-	constexpr Color( unsigned char x,unsigned char r,unsigned char g,unsigned char b )
+	constexpr Color( unsigned char x, unsigned char r, unsigned char g, unsigned char b )
 		:
 		dword( (x << 24u) | (r << 16u) | (g << 8u) | b )
 	{}
-	constexpr Color( unsigned char r,unsigned char g,unsigned char b )
+	constexpr Color( unsigned char r, unsigned char g, unsigned char b )
 		:
 		dword( (r << 16u) | (g << 8u) | b )
 	{}
-	constexpr Color( Color col,unsigned char x )
+	constexpr Color( Color col, unsigned char x )
 		:
 		Color( (x << 24u) | col.dword )
 	{}
@@ -90,6 +91,14 @@ public:
 	void SetB( unsigned char b )
 	{
 		dword = (dword & 0xFFFFFF00u) | b;
+	}
+	explicit Color( const Vec3& vec )
+		:
+		Color( unsigned char( vec.x ), unsigned char( vec.y ), unsigned char( vec.y ) )
+	{}
+	explicit operator Vec3() const
+	{
+		return { float( GetR() ), float( GetG() ), float( GetB() ) };
 	}
 };
 
