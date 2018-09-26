@@ -2,9 +2,8 @@
 
 #include "Pipeline.h"
 
-class TextureEffect
+class VertexColorEffect
 {
-	//vertex type for this effect
 public:
 
 	class Vertex
@@ -17,18 +16,18 @@ public:
 		{}
 		Vertex( const Vec3& pos, const Vertex& src )
 			:
-			pos( pos ),
-			t( src.t )
+			color( src.color ),
+			pos( pos )
 		{}
-		Vertex( const Vec3& pos, const Vec2& t )
+		Vertex( const Vec3& pos, const Vec3& color )
 			:
-			pos( pos ),
-			t( t )
+			color( color ),
+			pos( pos )
 		{}
 		Vertex& operator+=( const Vertex& rhs )
 		{
 			pos += rhs.pos;
-			t += rhs.t;
+			color += rhs.color;
 			return *this;
 		}
 		Vertex operator+( const Vertex& rhs ) const
@@ -38,7 +37,7 @@ public:
 		Vertex& operator-=( const Vertex& rhs )
 		{
 			pos -= rhs.pos;
-			t -= rhs.t;
+			color -= rhs.color;
 			return *this;
 		}
 		Vertex operator-( const Vertex& rhs ) const
@@ -48,7 +47,7 @@ public:
 		Vertex& operator*=( float rhs )
 		{
 			pos *= rhs;
-			t *= rhs;
+			color *= rhs;
 			return *this;
 		}
 		Vertex operator*( float rhs ) const
@@ -58,17 +57,16 @@ public:
 		Vertex& operator/=( float rhs )
 		{
 			pos /= rhs;
-			t /= rhs;
+			color /= rhs;
 			return *this;
 		}
 		Vertex operator/( float rhs ) const
 		{
 			return Vertex( *this ) /= rhs;
 		}
-
 	public:
 		Vec3 pos;
-		Vec2 t;		//texture coordinates
+		Vec3 color;
 	};
 
 	class PixelShader
@@ -77,28 +75,8 @@ public:
 		template<class Input>
 		Color operator()( const Input& in ) const
 		{
-			return ptex->GetPixel(
-				(unsigned int)std::min( in.t.x * texw + 0.5f, texclampx ),
-				(unsigned int)std::min( in.t.y * texh + 0.5f, texclampy )
-			);
-			//making sure not to read of the texture edge (fp error)
+			return Color( in.color );
 		}
-		
-		void BindTexture( const std::wstring& filename )
-		{
-			ptex = std::make_unique<Surface>( Surface::FromFile( filename ) );
-			texw = float( ptex->GetWidth() );
-			texh = float( ptex->GetHeight() );
-			texclampx = texw - 1.0f;
-			texclampy = texh - 1.0f;
-		}
-
-	private:
-		std::unique_ptr<Surface> ptex;
-		float texw;
-		float texh;
-		float texclampx;
-		float texclampy;
 	};
 
 public:

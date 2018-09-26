@@ -92,9 +92,9 @@ public:
 	{
 		dword = (dword & 0xFFFFFF00u) | b;
 	}
-	explicit Color( const Vec3& vec )
+	explicit Color( const Vec3 vec )
 		:
-		Color( unsigned char( vec.x ), unsigned char( vec.y ), unsigned char( vec.y ) )
+		Color( unsigned char( vec.x ), unsigned char( vec.y ), unsigned char( vec.z ) )
 	{}
 	explicit operator Vec3() const
 	{
