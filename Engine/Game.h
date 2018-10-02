@@ -38,8 +38,8 @@ private:
 	void UpdateModel();
 	/********************************/
 	/*  User Functions              */
-	void RandomSetup();
-	void SquareSetup();
+	void RandomSetup( int c );
+	void RegularPolygonSetup( int c );
 	/********************************/
 private:
 	MainWindow& wnd;
@@ -50,7 +50,7 @@ private:
 	std::vector<Vec2> corners;
 	std::random_device rd;
 	std::mt19937 rng;
-	static constexpr int corners_val = 4;
+	static constexpr int corners_val = 5;
 
 	std::vector<bool> screen;
 
