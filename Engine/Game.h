@@ -48,9 +48,22 @@ private:
 	std::vector<Vec2> corners;
 	std::random_device rd;
 	std::mt19937 rng;
-	static constexpr int corners_val = 3;
+	static constexpr int corners_val = 4;
 
 	std::vector<bool> screen;
+
+	std::uniform_int_distribution<int> intdist;
+
+	bool pause = false;
+
+	int speed = 1;
+	static constexpr int speed_const = 20;
+
+	int lastCorn = 0;
+
+	static constexpr float alpha = 0.5f;
+
+	Vec2 dotPos;
 
 	FrameTimer ft;
 	/********************************/

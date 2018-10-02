@@ -24,12 +24,14 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd )
+	gfx( wnd ),
+	intdist( 0, corners_val - 1 ),
+	screen( Graphics::ScreenWidth * Graphics::ScreenHeight, false )
 {
 	rng.seed( rd() );
 
 
-	float angle = (2 * PI) / float( corners_val );
+	const float angle = (2 * PI) / float( corners_val );
 	std::uniform_real_distribution<float> angledist( 0.0f, angle );
 	std::uniform_real_distribution<float> lengthdist( 0.5f, 0.9f );
 
@@ -38,15 +40,18 @@ Game::Game( MainWindow& wnd )
 	{
 		//using polar coordinates
 		// x = angle, y = length
-		float ang = angledist( rng ) * float(i + 1);
-		float len = lengthdist( rng );
+		const float ang = angledist( rng ) + angle * float(i);
+		const float len = lengthdist( rng );
 
 		//transform into cartesian coordinates
 		corners.emplace_back( (cos( ang ) * len), (sin( ang ) * len) );
 	}
+	
+	dotPos = corners[0];
+	
 
-	screen.reserve( Graphics::ScreenWidth * Graphics::ScreenHeight );
-
+	//dont want to skip time at the start
+	ft.Mark();
 }
 
 void Game::Go()
@@ -59,7 +64,59 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	auto e = wnd.kbd.ReadKey();
+	if( e.IsValid() )
+	{
+		if( e.IsPress() && e.GetCode() == VK_SPACE )
+		{
+			if( pause )
+			{
+				pause = false;
+			}
+			else
+			{
+				pause = true;
+			}
+		}
+
+		if( e.IsPress() && e.GetCode() == 'Q' )
+		{
+			if( speed < 100 )
+			{
+				speed++;
+			}
+		}
+
+		if( e.IsPress() && e.GetCode() == 'A' )
+		{
+			if( speed > 1 )
+			{
+				speed--;
+			}
+		}
+	}
+
 	float dt = ft.Mark();
+	int count = std::max( int( dt * float(speed * speed_const) ), 1 );
+	for( ; count > 0; count-- )
+	{
+		if( !pause )
+		{
+
+			int corn = lastCorn;
+			while( corn == lastCorn )
+			{
+				corn = intdist( rng );
+			}
+
+			dotPos = ((corners[corn] - dotPos) * alpha) + dotPos;
+			Vec2 screenPos = st.GetTransform( dotPos );
+			screen[Graphics::ScreenWidth * int( screenPos.y ) + int( screenPos.x )] = true;
+
+			lastCorn = corn;
+		}
+	}
+
 
 
 
@@ -67,13 +124,20 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
+	for( int i = 0; i < int(screen.size()); i++ )
+	{
+		if( screen[i] )
+		{
+			gfx.PutPixel( i % Graphics::ScreenWidth, i / Graphics::ScreenWidth, Colors::White );
+		}
+	}
 
 
 	//drawing corners
 	for( const auto vec : corners )
 	{
 		Vec2 v = st.GetTransform( vec );
-		gfx.PutPixel( v.x, v.y, Colors::Yellow );
+		gfx.PutPixel( int(v.x), int(v.y), Colors::Yellow );
 	}
 
 }
