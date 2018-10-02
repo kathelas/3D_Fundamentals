@@ -96,7 +96,8 @@ void Game::UpdateModel()
 
 			dotPos = ((corners[corn] - dotPos) * alpha) + dotPos;
 			Vec2 screenPos = st.GetTransform( dotPos );
-			screen[Graphics::ScreenWidth * int( screenPos.y ) + int( screenPos.x )] = true;
+
+			screen[Graphics::ScreenWidth * int( ceil( screenPos.y - 0.5f ) ) + int( ceil( screenPos.x -0.5f ) )] = true;
 
 			lastCorn = corn;
 		}
