@@ -21,8 +21,7 @@
 #pragma once
 
 #include "Graphics.h"
-#include "PubeScreenTransformer.h"
-#include "Cube.h"
+#include "ScreenTransformer.h"
 
 class Game
 {
@@ -42,7 +41,6 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
-	PubeScreenTransformer pst;
-	Cube cube;
+	ScreenTransformer pst;
 	/********************************/
 };
