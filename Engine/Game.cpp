@@ -87,12 +87,26 @@ void Game::UpdateModel()
 	{
 		if( !pause )
 		{
+			auto check = []( int a, int b )
+			{
+				if( b == 0 )
+				{
+					return ( a == (corners_val - 1) || a == (b + 1) );
+				}
+				else
+				{
+					return ( a == (b - 1) || (a == (b + 1) % corners_val) );
+				}
+			};
+
 
 			int corn = lastCorn;
-			while( corn == lastCorn )
+
+			do
 			{
 				corn = intdist( rng );
 			}
+			while( check( corn, lastCorn ) );
 
 			dotPos = ((corners[corn] - dotPos) * alpha) + dotPos;
 			Vec2 screenPos = st.GetTransform( dotPos );
