@@ -24,6 +24,7 @@
 #include "ScreenTransformer.h"
 #include <vector>
 #include <random>
+#include "FrameTimer.h"
 
 class Game
 {
@@ -51,5 +52,6 @@ private:
 
 	std::vector<bool> screen;
 
+	FrameTimer ft;
 	/********************************/
 };

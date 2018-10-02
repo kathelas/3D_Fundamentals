@@ -59,6 +59,8 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	float dt = ft.Mark();
+
 
 
 }
