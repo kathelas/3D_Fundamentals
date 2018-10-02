@@ -26,6 +26,27 @@ Game::Game( MainWindow& wnd )
 	wnd( wnd ),
 	gfx( wnd )
 {
+	rng.seed( rd() );
+
+
+	float angle = (2 * PI) / float( corners_val );
+	std::uniform_real_distribution<float> angledist( 0.0f, angle );
+	std::uniform_real_distribution<float> lengthdist( 0.5f, 0.9f );
+
+
+	for( int i = 1; i <= corners_val; i++  )
+	{
+		//using polar coordinates
+		// x = angle, y = length
+		float ang = angledist( rng ) * float(i + 1);
+		float len = lengthdist( rng );
+
+		//transform into cartesian coordinates
+		corners.emplace_back( (cos( ang ) * len), (sin( ang ) * len) );
+	}
+
+	screen.reserve( Graphics::ScreenWidth * Graphics::ScreenHeight );
+
 }
 
 void Game::Go()
@@ -38,9 +59,19 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+
+
 }
 
 void Game::ComposeFrame()
 {
-	
+
+
+	//drawing corners
+	for( const auto vec : corners )
+	{
+		Vec2 v = st.GetTransform( vec );
+		gfx.PutPixel( v.x, v.y, Colors::Yellow );
+	}
+
 }

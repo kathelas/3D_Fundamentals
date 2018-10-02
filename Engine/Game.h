@@ -22,6 +22,8 @@
 
 #include "Graphics.h"
 #include "ScreenTransformer.h"
+#include <vector>
+#include <random>
 
 class Game
 {
@@ -41,9 +43,13 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
-	ScreenTransformer pst;
+	ScreenTransformer st;
+	std::vector<Vec2> corners;
+	std::random_device rd;
+	std::mt19937 rng;
+	static constexpr int corners_val = 3;
 
-
+	std::vector<bool> screen;
 
 	/********************************/
 };
