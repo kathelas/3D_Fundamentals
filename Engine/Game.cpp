@@ -132,7 +132,6 @@ void Game::RandomSetup( int c)
 	for( int i = 0; i < c; i++ )
 	{
 		//using polar coordinates
-		// x = angle, y = length
 		const float ang = angledist( rng ) + angle * float( i );
 		const float len = lengthdist( rng );
 
