@@ -30,26 +30,11 @@ Game::Game( MainWindow& wnd )
 {
 	rng.seed( rd() );
 
-
-	const float angle = (2 * PI) / float( corners_val );
-	std::uniform_real_distribution<float> angledist( 0.0f, angle );
-	std::uniform_real_distribution<float> lengthdist( 0.5f, 0.9f );
-
-
-	for( int i = 1; i <= corners_val; i++  )
-	{
-		//using polar coordinates
-		// x = angle, y = length
-		const float ang = angledist( rng ) + angle * float(i);
-		const float len = lengthdist( rng );
-
-		//transform into cartesian coordinates
-		corners.emplace_back( (cos( ang ) * len), (sin( ang ) * len) );
-	}
+	//RandomSetup();
+	SquareSetup();
 	
 	dotPos = corners[0];
 	
-
 	//dont want to skip time at the start
 	ft.Mark();
 }
@@ -120,6 +105,33 @@ void Game::UpdateModel()
 
 
 
+}
+
+void Game::RandomSetup()
+{
+	const float angle = (2 * PI) / float( corners_val );
+	std::uniform_real_distribution<float> angledist( 0.0f, angle );
+	std::uniform_real_distribution<float> lengthdist( 0.5f, 0.9f );
+
+
+	for( int i = 1; i <= corners_val; i++ )
+	{
+		//using polar coordinates
+		// x = angle, y = length
+		const float ang = angledist( rng ) + angle * float( i );
+		const float len = lengthdist( rng );
+
+		//transform into cartesian coordinates
+		corners.emplace_back( (cos( ang ) * len), (sin( ang ) * len) );
+	}
+}
+
+void Game::SquareSetup()
+{
+	corners.emplace_back( 0.9f, 0.9f );
+	corners.emplace_back( -0.9f, 0.9f );
+	corners.emplace_back( 0.9f, -0.9f );
+	corners.emplace_back( -0.9f, -0.9f );
 }
 
 void Game::ComposeFrame()

@@ -38,6 +38,8 @@ private:
 	void UpdateModel();
 	/********************************/
 	/*  User Functions              */
+	void RandomSetup();
+	void SquareSetup();
 	/********************************/
 private:
 	MainWindow& wnd;
