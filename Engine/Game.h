@@ -52,13 +52,13 @@ private:
 	std::mt19937 rng;
 	static constexpr int corners_val = 5;
 
-	std::vector<bool> screen;
+	std::vector<bool> screen;	//saves which pixels already have been drawn too
 
 	std::uniform_int_distribution<int> intdist;
 
 	bool pause = false;
 
-	int speed = 1;
+	int speed = 1;	//basically how many new points are found between frames
 	static constexpr int speed_const = 20;
 
 	int lastCorn = 0;
