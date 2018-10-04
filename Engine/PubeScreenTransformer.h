@@ -10,16 +10,28 @@ public:
 		xFactor( float( Graphics::ScreenWidth ) / 2.0f ),
 		yFactor( float( Graphics::ScreenHeight ) / 2.0f )
 	{}
-	Vec3& Transform( Vec3& v ) const
+	template<class Vertex>
+	Vertex& Transform( Vertex& v ) const
 	{
-		const float zInv = 1.0f / v.z;
-		v.x = ( v.x * zInv + 1.0f ) * xFactor;
-		v.y = ( -v.y * zInv + 1.0f ) * yFactor;
+		//perspective divide
+		//divide all components of the vertex by z, so that we interpolate all components in the same space
+		const float zInv = 1.0f / v.pos.z;
+
+		v *= zInv;
+		
+		//adjusting x and y
+		v.pos.x = ( v.pos.x + 1.0f ) * xFactor;
+		v.pos.y = ( -v.pos.y + 1.0f ) * yFactor;
+
+		//storing 1/z in z for later use to recover our vertex attributes after interpolating
+		v.pos.z = zInv;
+
 		return v;
 	}
-	Vec3 GetTransformed( const Vec3& v ) const
+	template<class Vertex>
+	Vertex GetTransformed( const Vertex& v ) const
 	{
-		return Transform( Vec3( v ) );
+		return Transform( Vertex( v ) );
 	}
 private:
 	float xFactor;

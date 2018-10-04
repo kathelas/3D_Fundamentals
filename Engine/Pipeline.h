@@ -73,9 +73,9 @@ private:
 	void PostProcessTriangleVertices( Triangle<Vertex>& triangle )
 	{
 		//perspective divide + screen transform
-		pst.Transform( triangle.v0.pos );
-		pst.Transform( triangle.v1.pos );
-		pst.Transform( triangle.v2.pos );
+		pst.Transform( triangle.v0 );
+		pst.Transform( triangle.v1 );
+		pst.Transform( triangle.v2 );
 
 		DrawTriangle( triangle );
 	}
@@ -195,7 +195,14 @@ private:
 			for( int x = xStart; x < xEnd; x++, iline += diline )
 			{
 				//invoking pixelshader
-				gfx.PutPixel( x, y, effect.ps( iline ) );
+				//get interpolated z from interpolated 1/z stored in screen transformation
+				const float z = 1.0f / iline.pos.z;
+
+				//recover interpolated attributes, not needed to multiply x, y, z (pos), but not that important
+				const auto interpolated_attributes = iline * z;
+
+				//invoking pixelshader
+				gfx.PutPixel( x, y, effect.ps( interpolated_attributes ) );
 			}
 		}
 	}
