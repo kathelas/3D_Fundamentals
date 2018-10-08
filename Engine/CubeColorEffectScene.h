@@ -63,6 +63,7 @@ public:
 	}
 	virtual void Draw() override
 	{
+		pipeline.BeginFrame();
 		//rotation
 		const Mat3 rot =
 			Mat3::RotateX( thetaX ) *

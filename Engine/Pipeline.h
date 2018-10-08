@@ -5,6 +5,7 @@
 #include "Mat3.h"
 #include "Triangle.h"
 #include "IndexedTriangleList.h"
+#include "ZBuffer.h"
 
 template<class Effect>
 class Pipeline
@@ -17,7 +18,8 @@ public:
 public:
 	Pipeline( Graphics& gfx )
 		:
-		gfx( gfx )
+		gfx( gfx ),
+		zb( gfx.ScreenWidth, gfx.ScreenHeight )
 	{}
 	void Draw( IndexedTriangleList<Vertex>& trilist )
 	{
@@ -30,6 +32,10 @@ public:
 	void BindTranslation( const Vec3& transl_in )
 	{
 		translation = transl_in;
+	}
+	void BeginFrame()
+	{
+		zb.Clear();
 	}
 private:
 	//vertex processing
@@ -161,7 +167,7 @@ private:
 
 		DrawFlatTriangle( it0, it1, it2, dit0, dit1, itedge1 );
 	}
-	//processing common to both flat triangles and pixel drawing with pixelshader
+	//processing common to both flat triangles, depth culling and pixel drawing with pixelshader
 	void DrawFlatTriangle( const Vertex& it0, const Vertex& it1, const Vertex& it2, const Vertex& dv0, const Vertex& dv1, Vertex itedge1 )
 	{
 		//create left egde interpolant, always it0
@@ -194,15 +200,17 @@ private:
 
 			for( int x = xStart; x < xEnd; x++, iline += diline )
 			{
-				//invoking pixelshader
 				//get interpolated z from interpolated 1/z stored in screen transformation
 				const float z = 1.0f / iline.pos.z;
 
-				//recover interpolated attributes, not needed to multiply x, y, z (pos), but not that important
-				const auto interpolated_attributes = iline * z;
+				if( zb.TestAndSet( x, y, z ) )
+				{
+					//recover interpolated attributes, not needed to multiply x, y, z (pos), but not that important
+					const auto interpolated_attributes = iline * z;
 
-				//invoking pixelshader
-				gfx.PutPixel( x, y, effect.ps( interpolated_attributes ) );
+					//invoking pixelshader
+					gfx.PutPixel( x, y, effect.ps( interpolated_attributes ) );
+				}
 			}
 		}
 	}
@@ -215,4 +223,5 @@ private:
 	PubeScreenTransformer pst;
 	Mat3 rotation;
 	Vec3 translation;
+	ZBuffer zb;
 };

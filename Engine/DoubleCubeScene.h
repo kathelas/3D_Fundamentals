@@ -60,6 +60,7 @@ public:
 	}
 	virtual void Draw() override
 	{
+		pipeline.BeginFrame();
 		//fixed cube
 		{
 			//rotation
